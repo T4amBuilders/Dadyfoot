@@ -18,6 +18,10 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
         working-directory: ./frontend
+      - name: Create .env file
+        run: |
+          echo "env.sample" >> .env
+        working-directory: ./frontend
       - name: Run linters
         run: |
           flutter analyze
