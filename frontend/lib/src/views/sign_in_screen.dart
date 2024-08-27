@@ -1,6 +1,7 @@
+// lib/screens/sign_in_screen.dart
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import '../services/sign_in_service.dart';
+import '../services/user_service.dart';
 import 'sign_up_screen.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -15,30 +16,6 @@ class SignInScreenState extends State<SignInScreen> {
   final _passwordController = TextEditingController();
   String? errorMessage;
 
-  Future<String?> _getEmailFromUsername(String username) async {
-    try {
-      final lowerCaseUsername =
-          username.trim().toLowerCase(); // Convertir le pseudo en minuscules
-      final QuerySnapshot result = await FirebaseFirestore.instance
-          .collection('users')
-          .where('username', isEqualTo: lowerCaseUsername)
-          .get();
-
-      if (result.docs.isNotEmpty) {
-        return result.docs.first['email'];
-      } else {
-        setState(() {
-          errorMessage = "L'email ou le pseudo est incorrect.";
-        });
-      }
-    } catch (e) {
-      setState(() {
-        errorMessage = e.toString();
-      });
-    }
-    return null;
-  }
-
   Future<void> signIn() async {
     try {
       String emailOrUsername = _emailOrUsernameController.text.trim();
@@ -46,41 +23,25 @@ class SignInScreenState extends State<SignInScreen> {
       String? email;
 
       if (emailOrUsername.contains('@')) {
-        // C'est un email
         email = emailOrUsername;
       } else {
-        // C'est un pseudo, chercher l'email correspondant
-        email = await _getEmailFromUsername(emailOrUsername);
-        if (email == null) return; // Arrêter si le pseudo est incorrect
+        email = await UserService().getEmailFromUsername(emailOrUsername);
+        if (email == null) {
+          setState(() {
+            errorMessage = "L'email ou le pseudo est incorrect.";
+          });
+          return;
+        }
       }
 
-      // Connexion avec email et mot de passe
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    } on FirebaseAuthException catch (e) {
-      // Gérer les erreurs spécifiques
-      String errorText;
-      switch (e.code) {
-        case 'user-not-found':
-          errorText = 'Aucun utilisateur trouvé pour cet email.';
-          break;
-        case 'wrong-password':
-          errorText = 'Le mot de passe est incorrect.';
-          break;
-        case 'invalid-email':
-          errorText = 'L\'adresse email est invalide.';
-          break;
-        case 'too-many-requests':
-          errorText =
-              'Trop de tentatives de connexion. Veuillez réessayer plus tard.';
-          break;
-        default:
-          errorText = 'Une erreur est survenue : ${e.message}';
-      }
+      await AuthService().signInWithEmailAndPassword(email, password);
+    } on AuthException catch (e) {
       setState(() {
-        errorMessage = errorText;
+        errorMessage = e.toString();
+      });
+    } catch (e) {
+      setState(() {
+        errorMessage = 'Une erreur inconnue est survenue : $e';
       });
     }
   }
