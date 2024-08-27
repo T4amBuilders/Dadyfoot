@@ -3,8 +3,6 @@ include: package:flutter_lints/flutter.yaml
 analyzer:
   plugins:
     - dart_code_metrics
-  exclude:
-    - .env
 
 linter:
   rules:

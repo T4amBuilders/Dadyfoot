@@ -34,8 +34,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
-  assets:
-    - .env
 
 scripts:
   analyze: dartanalyzer --fatal-infos --fatal-warnings .
