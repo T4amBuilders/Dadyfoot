@@ -4,7 +4,7 @@ analyzer:
   plugins:
     - dart_code_metrics
   exclude:
-    - frontend/.env
+    - .env
 
 linter:
   rules:
