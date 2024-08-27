@@ -14,6 +14,7 @@ linter:
     - library_prefixes
     - prefer_const_constructors
     - unnecessary_brace_in_string_interps
+    - use_super_parameters
 
 metrics:
   cyclomatic-complexity: 20
