@@ -1,0 +1,25 @@
+name: Flutter Lint Check
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.2'
+
+      - name: Flutter doctor
+        run: flutter doctor
+        working-directory: ./frontend
+      - name: Install dependencies
+        run: flutter pub get
+        working-directory: ./frontend
+      - name: Run linters
+        run: |
+          flutter analyze
+          flutter pub run dart_code_metrics:metrics lib
+        working-directory: ./frontend
