@@ -1,0 +1,28 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  plugins:
+    - dart_code_metrics
+
+linter:
+  rules:
+    - avoid_print
+    - camel_case_types
+    - constant_identifier_names
+    - empty_statements
+    - no_leading_underscores_for_local_identifiers
+    - library_prefixes
+    - prefer_const_constructors
+    - unnecessary_brace_in_string_interps
+
+metrics:
+  cyclomatic-complexity: 20
+  number-of-arguments: 4
+  number-of-methods: 10
+  maximum-nesting-level: 5
+  lines-of-code: 100
+  total-lines-of-code: 500
+
+metrics-exclude:
+  - test/**
+  - lib/generated/**

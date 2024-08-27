@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "415240497803",
+    "project_id": "dadyfoot-331b9",
+    "storage_bucket": "dadyfoot-331b9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:415240497803:android:694aa7d724bc57cf6d828e",
+        "android_client_info": {
+          "package_name": "com.dadyfoot.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRnV8CEnTwBRYUZ415g6e_kCuzXftW0hs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
