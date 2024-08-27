@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import '../services/sign_up_service.dart';
+import '../utils/validators.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -16,19 +16,10 @@ class SignUpScreenState extends State<SignUpScreen> {
   final _usernameController = TextEditingController();
   String? errorMessage;
 
-  // Fonction de validation pour vérifier si le pseudo est alphanumérique
-  bool _isValidUsername(String username) {
-    final RegExp usernameRegExp = RegExp(r'^[a-zA-Z0-9]+$');
-    return usernameRegExp.hasMatch(username);
-  }
-
   Future<void> createUserWithEmailAndPassword() async {
-    String username = _usernameController.text
-        .trim()
-        .toLowerCase(); // Convertir le pseudo en minuscules
+    String username = _usernameController.text.trim().toLowerCase();
 
-    // Vérification que le pseudo est alphanumérique
-    if (!_isValidUsername(username)) {
+    if (!Validators.isValidUsername(username)) {
       setState(() {
         errorMessage =
             "Le pseudo ne peut contenir que des lettres et des chiffres.";
@@ -36,58 +27,17 @@ class SignUpScreenState extends State<SignUpScreen> {
       return;
     }
 
-    // Vérifier si le pseudo est déjà utilisé
-    final QuerySnapshot result = await FirebaseFirestore.instance
-        .collection('users')
-        .where('username', isEqualTo: username)
-        .get();
+    final authService = AuthService();
+    final result = await authService.createUserWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+      username: username,
+      name: _nameController.text.trim(),
+    );
 
-    if (result.docs.isNotEmpty) {
+    if (result != null) {
       setState(() {
-        errorMessage = "Le pseudo est déjà pris. Veuillez en choisir un autre.";
-      });
-      return;
-    }
-
-    try {
-      // Créer l'utilisateur avec e-mail et mot de passe
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-
-      // Ajouter les informations utilisateur dans Firestore
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userCredential.user?.uid)
-          .set({
-        'username': username, // Stocker le pseudo en minuscules
-        'name': _nameController.text.trim(),
-        'email': _emailController.text.trim(),
-      });
-    } on FirebaseAuthException catch (e) {
-      // Gérer les erreurs spécifiques
-      String errorText;
-      switch (e.code) {
-        case 'email-already-in-use':
-          errorText = 'Cet email est déjà utilisé.';
-          break;
-        case 'invalid-email':
-          errorText = 'L\'adresse email est invalide.';
-          break;
-        case 'weak-password':
-          errorText = 'Le mot de passe est trop faible.';
-          break;
-        case 'operation-not-allowed':
-          errorText =
-              'Les opérations d\'inscription sont actuellement désactivées.';
-          break;
-        default:
-          errorText = 'Une erreur est survenue : ${e.message}';
-      }
-      setState(() {
-        errorMessage = errorText;
+        errorMessage = result;
       });
     }
   }

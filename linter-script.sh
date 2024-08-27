@@ -1,7 +1,7 @@
 #!/bin/bash
 echo "Starting script..."
 echo "Go to frontend..."
-cd ../frontend/
+cd ./frontend/
 echo "-------------------"
 echo "Verifiying code style..."
 flutter analyze
