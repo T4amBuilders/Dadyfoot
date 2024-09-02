@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../services/profile_service.dart';
-import '../../widgets/profile_widgets.dart';
-import './profile_screen.dart';
+import '../../widgets/profile_widget.dart';
+import 'profile_screen.dart';
 
 class ProfileScreenState extends State<ProfileScreen> {
   final _nameController = TextEditingController();
