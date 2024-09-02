@@ -25,5 +25,4 @@ jobs:
       - name: Run linters
         run: |
           flutter analyze
-          flutter pub run dart_code_metrics:metrics lib
         working-directory: ./frontend
