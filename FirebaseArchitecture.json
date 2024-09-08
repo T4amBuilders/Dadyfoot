@@ -1,0 +1,191 @@
+{
+    "users": {
+      "$userID": {
+        "username": "string", // Pseudo unique et non modifiable
+        "name": "string",
+        "email": "string",
+        "description": "string",
+        "profile_avatar": "string", // URL de l'avatar
+        "coins": "number",
+        "badges": ["string"], // Références aux badges obtenus
+        "notifications_enabled": {
+          "invitations": "boolean",
+          "game_results": "boolean"
+        },
+        "theme": "string", // Référence au thème actif
+        "role": "string", // "défenseur" ou "attaquant"
+        "games_played": "number",
+        "games_won": "number",
+        "games_lost": "number",
+        "points": "number",
+        "matches_history": ["reference"], // Références aux parties jouées
+        "tournaments_history": ["reference"], // Références aux tournois participés
+        "favorite_mode": "string",
+        "sound": "string", // Référence au son/bruitage choisi
+        "trophies": {
+          "gold": "number",
+          "silver": "number",
+          "bronze": "number"
+        },
+        "daily_points_limit": {
+          "points_gained": "number",
+          "coins_gained": "number",
+          "last_reset": "timestamp" // Pour gérer la limite journalière
+        }
+      }
+    },
+    "games": {
+      "$gameID": {
+        "created_by": "reference", // Référence à l'utilisateur créateur
+        "players": ["reference"], // Références aux joueurs participants
+        "status": "string", // "in_progress", "completed", "canceled"
+        "mode": "string", // "Minuterie", "Basique", "Tournante", "Folie", "Chaos"
+        "scores": ["number"], // Scores des équipes
+        "start_time": "timestamp",
+        "end_time": "timestamp",
+        "rewards": {
+          "points": "number",
+          "coins": "number"
+        },
+        "penalties": {
+          "points": "number",
+          "coins": "number"
+        },
+        "coins_at_stake": "number", // Nombre de coins mis en jeu
+        "team_selection": "string", // "Aléatoire", "Matchmaking", "Manuel"
+        "replacement_players": ["reference"], // Joueurs remplaçants
+        "tournament_id": "reference" // Null si le jeu n'est pas lié à un tournoi
+      }
+    },
+    "tournaments": {
+      "$tournamentID": {
+        "created_by": "reference", // Référence à l'utilisateur créateur
+        "participants": ["reference"], // Références aux joueurs participants
+        "status": "string", // "in_progress", "completed", "canceled"
+        "game_mode": "string",
+        "matchmaking": "boolean", // Si true, utilise le système de matchmaking
+        "bracket": {
+          "rounds": [
+            {
+              "matches": [
+                {
+                  "team1": ["reference"], // Références aux joueurs de l'équipe 1
+                  "team2": ["reference"], // Références aux joueurs de l'équipe 2
+                  "winner": "reference", // Référence à l'équipe gagnante
+                  "game_ref": "reference" // Référence au jeu associé
+                }
+              ]
+            }
+          ]
+        },
+        "final_scores": {
+          "$userID": "number" // Scores finaux par utilisateur
+        },
+        "coins_at_stake": "number", // Nombre total de coins mis en jeu pour le tournoi
+        "rewards": {
+          "points": {
+            "first": "number",
+            "second": "number",
+            "third": "number"
+          },
+          "coins": {
+            "first": "number",
+            "second": "number",
+            "third": "number"
+          },
+          "trophies": {
+            "first": "string",
+            "second": "string",
+            "third": "string"
+          }
+        },
+        "start_time": "timestamp",
+        "end_time": "timestamp"
+      }
+    },
+    "leaderboards": {
+      "$leaderboardID": {
+        "filter": "string", // "daily", "weekly", "monthly", "all-time"
+        "last_updated": "timestamp",
+        "rankings": [
+          {
+            "user": "reference", // Référence à l'utilisateur
+            "points": "number",
+            "coins": "number",
+            "games_won": "number",
+            "games_lost": "number"
+          }
+        ]
+      }
+    },
+    "badges": {
+      "$badgeID": {
+        "name": "string",
+        "description": "string",
+        "icon": "string", // URL de l'icône du badge
+        "criteria": {
+          "type": "string", // "points", "games_won", "consecutive_wins", etc.
+          "value": "number",
+          "game_mode": "string" // Mode de jeu spécifique ou "all" pour tous les modes
+        },
+        "is_active": "boolean" // Pour activer/désactiver le badge
+      }
+    },
+    "themes": {
+      "$themeID": {
+        "name": "string",
+        "description": "string",
+        "background": "string", // URL de l'image de fond
+        "is_active": "boolean",
+        "unlock_criteria": {
+          "type": "string", // "points", "coins", "level", etc.
+          "value": "number"
+        }
+      }
+    },
+    "sounds": {
+      "$soundID": {
+        "name": "string",
+        "file_url": "string", // URL du fichier audio
+        "type": "string", // "sonnerie" ou "bruitage"
+        "is_active": "boolean",
+        "unlock_criteria": {
+          "type": "string", // "points", "coins", "level", etc.
+          "value": "number"
+        }
+      }
+    },
+    "store": {
+      "items": {
+        "$itemID": {
+          "name": "string",
+          "description": "string",
+          "type": "string", // "theme", "sound", "avatar", etc.
+          "price": "number", // Prix en coins
+          "is_available": "boolean" // Pour activer/désactiver l'item dans le store
+        }
+      }
+    },
+    "admin_logs": {
+      "$logID": {
+        "action": "string", // Type d'action administrative effectuée
+        "performed_by": "reference", // Référence à l'administrateur
+        "affected_entity": "string", // ID de l'entité affectée (user, game, etc.)
+        "details": "string", // Détails de l'action
+        "timestamp": "timestamp"
+      }
+    },
+    "game_rules": {
+      "current_version": "string", // Version actuelle des règles
+      "content": "string" // Contenu des règles en format texte ou markdown
+    },
+    "notifications": {
+      "$notificationID": {
+        "user": "reference", // Référence à l'utilisateur destinataire
+        "type": "string", // "invitation", "game_result", "tournament_update", etc.
+        "content": "string", // Contenu de la notification
+        "is_read": "boolean",
+        "created_at": "timestamp"
+      }
+    }
+  }
