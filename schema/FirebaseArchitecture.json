@@ -1,8 +1,8 @@
 {
     "users": {
       "$userID": {
-        "username": "string", // Pseudo unique et non modifiable
-        "name": "string",
+        "pseudo": "string", // Pseudo unique et non modifiable
+        "username": "string",
         "email": "string",
         "description": "string",
         "profile_avatar": "string", // URL de l'avatar
@@ -53,7 +53,7 @@
         },
         "coins_at_stake": "number", // Nombre de coins mis en jeu
         "team_selection": "string", // "Aléatoire", "Matchmaking", "Manuel"
-        "replacement_players": ["reference"], // Joueurs remplaçants
+        "replacement_players": [{"$playersID": "reference"}], // Joueurs remplaçants
         "tournament_id": "reference" // Null si le jeu n'est pas lié à un tournoi
       }
     },
